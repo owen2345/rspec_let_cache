@@ -22,12 +22,9 @@ module RspecLetCache
   def let_cache(attr_name, &block)
     var_name = "@#{attr_name}"
     let(attr_name) { RspecLetCacheObj.instance_variable_get(var_name) }
-    # after(:all) { RspecLetCacheObj.remove_instance_variable(var_name) }
+    after(:all) { RspecLetCacheObj.remove_instance_variable(var_name) }
     before do
-      # unless RspecLetCacheObj.instance_variable_defined?(var_name)
-      old_value = RspecLetCacheObj.instance_variable_get(var_name)
-      puts "@@@@@@@@@@@@beforeeee: #{old_value.inspect}"
-      unless old_value
+      unless RspecLetCacheObj.instance_variable_defined?(var_name)
         value = instance_exec(&block)
         RspecLetCacheObj.instance_variable_set(var_name, value)
       end
