@@ -24,6 +24,16 @@ Load dependency to be available in your tests
 require 'rspec_let_cache'
 ```
 
+## Structure
+  ```
+  let_cache(<variable_name>){ 
+    block to calculate value
+    return calculated value
+  }
+  ```
+  The first time `variable_name` is called, then the block to calculate value is evaluated and saved as a cache value. 
+  The next time the variable is called, then it returns the corresponding cached value.
+
 ## Examples
 ### Reusing controller response
 ```ruby
