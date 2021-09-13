@@ -48,7 +48,7 @@ describe 'when checking response content', type: :controller do
 end    
 ```
 
-### Reusing features
+### Reusing features page content
 ```ruby
 describe 'index page', type: :feature do
   let_cache(:articles_cached) do
