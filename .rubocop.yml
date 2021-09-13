@@ -1,0 +1,29 @@
+# This is the configuration used to check the rubocop source code.
+
+AllCops:
+  TargetRubyVersion: 2.5
+  Exclude:
+    - 'rspec_chunked.gemspec'
+    - 'bin/test'
+    - 'Gemfile'
+    - 'Rakefile'
+    - 'spec/rails_helper.rb'
+    - 'spec/spec_helper.rb'
+    - 'rspec_let_cache.gemspec'
+    - 'spec/dummy/**/*'
+
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*.rb'
+
+Layout/LineLength:
+  Max: 120
+
+Lint/MissingSuper:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Style/RescueStandardError:
+  EnforcedStyle: implicit
