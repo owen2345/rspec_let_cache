@@ -1,7 +1,7 @@
-require "rspec_let_cache/version"
-# require "rspec_let_cache/railtie"
-require 'rspec'
+# frozen_string_literal: true
 
+require 'rspec_let_cache/version'
+require 'rspec'
 module RspecLetCache
   class RspecLetCacheObj
   end
