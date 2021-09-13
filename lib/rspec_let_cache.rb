@@ -14,21 +14,21 @@ module RspecLetCache
   #       visit articles_path
   #       page
   #     end
+  #     before { allow(page_cached).to receive(:reset!) }
   #     it 'includes page title' { expect(page_cached).to have_css('header h1', text: "Articles") }
   #     it 'includes articles' { expect(page_cached).to have_content(article_cached.title) }
   #     it 'includes button to delete article' { expect(page_cached).to have_css('table.articles_table .btn-delete') }
   #     it 'includes button to edit article' { expect(page_cached).to have_css('table.articles_table .btn-edit') }
   #   end
-  def let_cache(attr_name, &block)
+  def let_cache(attr_name, after_all: nil, &block)
     var_name = "@#{attr_name}"
-    let(attr_name) { RspecLetCacheObj.instance_variable_get(var_name) }
-    after(:all) { RspecLetCacheObj.remove_instance_variable(var_name) }
-    before do
-      unless RspecLetCacheObj.instance_variable_defined?(var_name)
-        value = instance_exec(&block)
-        RspecLetCacheObj.instance_variable_set(var_name, value)
-      end
+    let(attr_name) do
+      already_saved = RspecLetCacheObj.instance_variable_defined?(var_name)
+      RspecLetCacheObj.instance_variable_set(var_name, instance_exec(&block)) unless already_saved
+      RspecLetCacheObj.instance_variable_get(var_name)
     end
+    after(:all) { RspecLetCacheObj.instance_variable_get(var_name)&.send(after_all) if after_all }
+    after(:all) { RspecLetCacheObj.remove_instance_variable(var_name) rescue nil } # rubocop:disable Style/RescueModifier
   end
 end
 
