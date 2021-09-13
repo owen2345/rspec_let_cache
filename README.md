@@ -1,5 +1,7 @@
 # RspecLetCache
 This gem permits to cache rspec test values used/shared across tests and thus, it reduces dramatically the time to run involved tests.
+
+Results for "features" example:
 ![A test image](docs/image.png)
 
 ## Installation
