@@ -1,25 +1,80 @@
 # RspecLetCache
-Short description and motivation.
-
-## Usage
-How to use my plugin.
+This gem permits to cache rspec test values used/shared across tests and thus, it reduces dramatically the time to run involved tests.
+![A test image](docs/image.png)
 
 ## Installation
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'rspec_let_cache'
+group :test do
+  gem 'rspec_let_cache'
+end
 ```
 
 And then execute:
 ```bash
-$ bundle
+$ bundle install
 ```
 
-Or install it yourself as:
-```bash
-$ gem install rspec_let_cache
+Load dependency to be available in your tests
+```ruby
+# spec/spec_helper.rb
+require 'rspec_let_cache'
 ```
+
+## Examples
+### Reusing controller response
+```ruby
+describe 'when checking response content', type: :controller do
+  render_views
+  let_cache(:articles_cached) do
+    [Article.create!(title: 'article 1'), Article.create!(title: 'article 2')]
+  end
+  let_cache(:response_cached) do
+    articles_cached
+    get :index
+    response
+  end
+
+  it 'includes first article\'s title' do
+    expect(response_cached.body).to include(articles_cached.first.title)
+  end
+
+  it 'includes second article\'s title' do
+    expect(response_cached.body).to include(articles_cached.second.title)
+  end
+end    
+```
+
+### Reusing features
+```ruby
+describe 'index page', type: :feature do
+  let_cache(:articles_cached) do
+    [Article.create!(title: 'article 1'), Article.create!(title: 'article 2')]
+  end
+  let_cache(:page_cached) do
+    articles_cached
+    visit articles_path
+    page
+  end
+  before { allow(page_cached).to receive(:reset!) } # Make capybara page to be reusable
+  
+  describe 'when checking page content' do
+    it 'includes first article' do
+      expect(page_cached).to have_content(articles_cached.first.title)
+    end
+  
+    it 'includes second article' do
+      expect(page_cached).to have_content(articles_cached.second.title)
+    end
+  
+    it 'includes button to delete' do
+      expect(page_cached).to have_css('#articles_table .edit_button')
+    end
+  end
+end
+```
+  Note: Articles page is visited just one time.
 
 ## Contributing
 Contribution directions go here.
