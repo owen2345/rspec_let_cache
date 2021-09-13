@@ -7,7 +7,6 @@ gemspec
 group :development do
   gem 'database_cleaner-active_record'
   gem 'capybara'
-  gem "capybara-webkit"
   gem 'rails'
   gem 'sqlite3'
   gem 'rspec-rails', '~> 5.0.0'
