@@ -20,13 +20,14 @@ module RspecLetCache
   #     it 'includes button to delete article' { expect(page_cached).to have_css('table.articles_table .btn-delete') }
   #     it 'includes button to edit article' { expect(page_cached).to have_css('table.articles_table .btn-edit') }
   #   end
-  def let_cache(attr_name, after_all: nil, &block)
+  def let_cache(attr_name, feature: false, after_all: nil, &block)
     var_name = "@#{attr_name}"
     let(attr_name) do
       already_saved = RspecLetCacheObj.instance_variable_defined?(var_name)
       RspecLetCacheObj.instance_variable_set(var_name, instance_exec(&block)) unless already_saved
       RspecLetCacheObj.instance_variable_get(var_name)
     end
+    before { allow(page).to receive(:reset!) } if feature # Make capybara page to be reusable
     after(:all) { RspecLetCacheObj.instance_variable_get(var_name)&.send(after_all) if after_all }
     after(:all) { RspecLetCacheObj.remove_instance_variable(var_name) rescue nil } # rubocop:disable Style/RescueModifier
   end

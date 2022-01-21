@@ -64,12 +64,13 @@ describe 'index page', type: :feature do
   let_cache(:articles_cached) do
     [Article.create!(title: 'article 1'), Article.create!(title: 'article 2')]
   end
-  let_cache(:page_cached) do
+  
+  # Make capybara page to be reusable by passing feature: true
+  let_cache(:page_cached, feature: true) do
     articles_cached
     visit articles_path
     page
   end
-  before { allow(page_cached).to receive(:reset!) } # Make capybara page to be reusable
   
   describe 'when checking page content' do
     it 'includes first article' do
